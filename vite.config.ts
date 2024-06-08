@@ -20,7 +20,7 @@ export default defineConfig({
       entry: {
         main: resolve(__dirname, 'lib/main.ts'),
       },
-      name: '@newhorizons/core',
+      name: '@satellite-games/orbit',
       formats: ['es'],
     },
   },

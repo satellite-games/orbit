@@ -1,4 +1,4 @@
-# @newhorizons/core
+# Orbit
 
 ![Release builds](https://github.com/satellite-games/orbit/actions/workflows/release.yml/badge.svg)
 ![Quality checks](https://github.com/satellite-games/orbit/actions/workflows/main.yml/badge.svg)
