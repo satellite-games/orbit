@@ -10,7 +10,7 @@ export default defineConfig({
       provider: 'v8',
       all: true,
       include: ['lib/**/*.ts'],
-      exclude: ['lib/*.ts', 'lib/locales/**/*', 'lib/**/*index.ts', '**/*types.ts', '**/*mocks.ts'],
+      exclude: ['lib/*.ts', 'lib/**/*index.ts', '**/*types.ts', '**/*mocks.ts'],
       reportsDirectory: 'reports/vitest/coverage',
       reporter: ['text', 'cobertura'],
     },
