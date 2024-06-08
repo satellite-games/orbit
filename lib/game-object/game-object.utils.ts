@@ -1,4 +1,4 @@
-import type { GameObjectName, GameObjectTypeName } from './types';
+import type { GameObjectName, GameObjectTypeName } from '@/types/private-types';
 
 /**
  * Derives the `GameObjectTypeName` from the game object or blueprint's `name`.

@@ -30,22 +30,3 @@ export type Saved<TGameObject extends GameObject, TOmitted extends keyof TGameOb
   'id' | 'owner' | 'children'
 > &
   Required<Pick<TGameObject, 'id'>>;
-
-/**
- * The unified type for all available game object names. Defaults to `string`,
- * but consumers can override this type to a more specific type if desired.
- */
-export type GameObjectName = string;
-
-/**
- * The unified type for all available game object type names. A game object type name
- * corresponds to a game object sub class. Defaults to `string`, but consumers can
- * override this type to a more specific type if desired.
- */
-export type GameObjectTypeName = string;
-
-/**
- * A registry of game objects. The key is the game object set name and the value.
- * Consumers should override this type to represent their own game object sets.
- */
-export type GameObjectRegistry = Record<GameObjectName, GameObject>;

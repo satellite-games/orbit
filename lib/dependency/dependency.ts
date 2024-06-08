@@ -1,5 +1,5 @@
-import type { NonFunctionPropertyNames } from '@/types/private-types';
-import { GameObject, getGameObjectTypeName, type GameObjectName } from '@/game-object';
+import type { NonFunctionPropertyNames, GameObjectName } from '@/types/private-types';
+import { GameObject, getGameObjectTypeName } from '@/game-object';
 import type { IDependency } from './types';
 
 /**

@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v4 as uuidv4 } from 'uuid';
-import type { GameObjectName, GameObjectRegistry, GameObjectTypeName } from './types';
-import type { ElementType, NumericProperty } from '@/types/private-types';
+import type {
+  ElementType,
+  NumericProperty,
+  GameObjectName,
+  GameObjectRegistry,
+  GameObjectTypeName,
+} from '@/types/private-types';
 import { Modifier, applyModifiers } from '@/modifier';
 import { Dependency } from '@/dependency/dependency';
 import { getGameObjectTypeName } from './game-object.utils';
@@ -235,36 +240,34 @@ export class GameObject implements GameObject {
 
   /**
    * A hook that runs before the game object is serialized. This can be used by subclasses
-   * to customize the serialization process.
-   * @param object The object to serialize.
+   * to customize the serialization process. `state` is a shallow copy of the game object
+   * and can (at least on the top level) be modified without affecting the game object.
+   * @param state The state to serialize.
    */
-  beforeSerialize(object: typeof this): object {
+  beforeSerialize(state: any): Record<string, any> {
     // Do nothing by default
-    return object;
+    return state;
   }
 
   /**
    * Serializes the game object. This is useful for saving the game state to a file.
-   * @param state The state of the game object to serialize. Defaults to the current state
-   * (`this`) of the game object. A different state may be provided to apply changes to the
-   * game object before serialization.
    */
-  serialize(state?: typeof this): string {
-    const object: typeof this = state ? { ...state } : { ...this };
-    const preSerializedObject: Record<string, any> = this.beforeSerialize(object);
+  serialize(): string {
+    const state: typeof this = { ...this };
+    const preSerializedState: Record<string, any> = this.beforeSerialize(state);
     // Remove owner reference
-    delete preSerializedObject.owner;
-    if (Object.keys(object.children).length === 0) {
+    delete preSerializedState.owner;
+    if (Object.keys(state.children).length === 0) {
       // Remove empty children objects
-      delete preSerializedObject.children;
+      delete preSerializedState.children;
     } else {
       // Or serialize children
-      for (const key in object.children) {
-        const children = object.children[key as any as keyof typeof object.children];
+      for (const key in state.children) {
+        const children = state.children[key as any as keyof typeof state.children];
         if (!children) continue;
-        preSerializedObject.children[key] = children.map((child) => child.serialize());
+        preSerializedState.children[key] = children.map((child) => child.serialize());
       }
     }
-    return JSON.stringify(preSerializedObject);
+    return JSON.stringify(preSerializedState);
   }
 }
