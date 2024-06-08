@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v4 as uuidv4 } from 'uuid';
-import type { Blueprint, GameObjectName, GameObjectRegistry, GameObjectTypeName, Saved } from './types';
+import type { GameObjectName, GameObjectRegistry, GameObjectTypeName } from './types';
 import type { ElementType, NumericProperty } from '@/types/private-types';
 import { Modifier, applyModifiers } from '@/modifier';
 import { Dependency } from '@/dependency/dependency';
