@@ -23,5 +23,8 @@ export default defineConfig({
       name: '@satellite-games/orbit',
       formats: ['es'],
     },
+    rollupOptions: {
+      external: ['uuid'],
+    },
   },
 });
