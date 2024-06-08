@@ -13,6 +13,7 @@
   - [Dependency](#Dependency)
   - [Modifier](#Modifier)
   - [Event](#Event)
+- [Building a package with Orbit](#BuildingapackagewithOrbit)
 - [License](#License)
 
 <!-- vscode-markdown-toc-config
@@ -46,6 +47,14 @@ The [`Modifier`](/lib/modifier/modifier.ts) class allows `GameObject`s to modify
 ### <a name='Event'></a>Event
 
 The [`Event`](/lib/event/event.ts) class represents the base class for all sorts of events that may happen in the game. Events are stored in a global [`EventLog`](/lib/event/event-log.ts).
+
+## <a name='BuildingapackagewithOrbit'></a>Building a package with Orbit
+
+If you're building a package that is based on Orbit, you might want consumers to be able to access Orbit's features or types without having to install it separately. To achieve that, simply re-export everything from Orbit in your package. For example, in your main entrypoint file, do:
+
+```js
+export * from '@satellite-games/orbit';
+```
 
 ## <a name='License'></a>License
 
