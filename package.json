@@ -51,7 +51,7 @@
     "lint-registries": "node scripts/lint-registries.js"
   },
   "devDependencies": {
-    "@types/node": "^20.12.10",
+    "@types/node": "^20.14.2",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
