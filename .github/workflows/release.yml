@@ -1,0 +1,42 @@
+name: release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - v*
+
+jobs:
+  install_deps:
+    name: Install dependencies
+    uses: spuxx1701/ci-cd/.github/workflows/pnpm_install_deps.yml@v3.0.0
+
+  run_checks:
+    name: Run code checks
+    uses: spuxx1701/ci-cd/.github/workflows/pnpm_run_checks.yml@v3.0.0
+    needs:
+      - install_deps
+
+  run_unit_tests:
+    name: Run unit tests
+    uses: spuxx1701/ci-cd/.github/workflows/pnpm_run_unit_tests.yml@v3.0.0
+    needs:
+      - install_deps
+    with:
+      COVERAGE_FILENAME: reports/vitest/coverage/cobertura-coverage.xml
+      COVERAGE_FAIL_BELOW_MIN: 100
+
+  build:
+    name: Build artifact
+    uses: spuxx1701/ci-cd/.github/workflows/pnpm_build.yml@v3.0.0
+    needs:
+      - run_checks
+      - run_unit_tests
+
+  publish:
+    name: Publish artifact
+    uses: spuxx1701/ci-cd/.github/workflows/pnpm_publish.yml@v3.0.0
+    needs:
+      - build
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

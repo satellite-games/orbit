@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+    // Set an alias for the lib folder
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./lib/*"],
+      "internal-mocks/*": ["./tests/internal-mocks/*"]
+    },
+    "types": ["vite/client"]
+  },
+  "include": ["app", "lib", "tests", "scripts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

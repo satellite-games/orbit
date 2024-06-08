@@ -1,0 +1,70 @@
+{
+  "name": "@satellite-games/orbit",
+  "version": "0.1.0",
+  "author": {
+    "name": "spuxx",
+    "email": "hi@spuxx.dev",
+    "url": "https://spuxx.dev"
+  },
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "newhorizons"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/satellite-games/orbit"
+  },
+  "homepage": "https://github.com/satellite-games/orbit/blob/main/README.md",
+  "bugs": {
+    "url": "https://github.com/satellite-games/orbit/issues"
+  },
+  "type": "module",
+  "main": "dist/main.js",
+  "module": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/main.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "pnpm run test:unit",
+    "test:unit": "vitest run --coverage --reporter=default --reporter=junit --outputFile='reports/junit/junit.xml'",
+    "check": "pnpm types && pnpm run lint && pnpm run prettier-check && pnpm run lint-registries",
+    "types": "tsc --noEmit",
+    "lint": "eslint . --ext ts,tsx",
+    "prettier-check": "prettier --check .",
+    "format": "prettier --write .",
+    "create-registry": "node scripts/create-registry.js",
+    "lint-registries": "node scripts/lint-registries.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.10",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vitest/coverage-v8": "^1.4.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.1.1",
+    "typescript": "^5.2.2",
+    "uuid": "^9.0.1",
+    "vite": "^5.2.8",
+    "vite-plugin-dts": "^3.9.1",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.4.0"
+  }
+}

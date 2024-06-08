@@ -1,0 +1,27 @@
+name: main
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  install_deps:
+    name: Install dependencies
+    uses: spuxx1701/ci-cd/.github/workflows/pnpm_install_deps.yml@v3.0.0
+
+  run_checks:
+    name: Run code checks
+    uses: spuxx1701/ci-cd/.github/workflows/pnpm_run_checks.yml@v3.0.0
+    needs:
+      - install_deps
+
+  run_unit_tests:
+    name: Run unit tests
+    uses: spuxx1701/ci-cd/.github/workflows/pnpm_run_unit_tests.yml@v3.0.0
+    needs:
+      - install_deps
+    with:
+      COVERAGE_FILENAME: reports/vitest/coverage/cobertura-coverage.xml
+      COVERAGE_FAIL_BELOW_MIN: 100
