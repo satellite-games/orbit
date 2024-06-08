@@ -49,4 +49,4 @@ The [`Event`](/lib/event/event.ts) class represents the base class for all sorts
 
 ## <a name='License'></a>License
 
-See [LICENSE](/LICENSE.md).
+See [LICENSE](/LICENSE).
