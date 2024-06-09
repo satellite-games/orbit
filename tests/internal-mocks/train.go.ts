@@ -39,7 +39,7 @@ export const trains: Record<Key, Blueprint<Train, 'length'>> = {
 };
 
 declare module '@/registry' {
-  interface GameObjectRegistry {
-    train: GameObjectRegistryEntry<Train, TrainName>;
+  interface Registry {
+    train: RegistryEntry<Train, TrainName>;
   }
 }

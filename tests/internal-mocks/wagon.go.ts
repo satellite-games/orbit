@@ -43,7 +43,7 @@ export const wagons: Record<Key, Blueprint<Wagon>> = {
 };
 
 declare module '@/registry' {
-  interface GameObjectRegistry {
-    wagon: GameObjectRegistryEntry<Wagon, WagonName>;
+  interface Registry {
+    wagon: RegistryEntry<Wagon, WagonName>;
   }
 }

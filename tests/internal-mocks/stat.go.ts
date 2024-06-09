@@ -24,7 +24,7 @@ export const stats: Record<Key, Blueprint<Stat>> = {
 };
 
 declare module '@/registry' {
-  interface GameObjectRegistry {
-    stat: GameObjectRegistryEntry<Stat, StatName>;
+  interface Registry {
+    stat: RegistryEntry<Stat, StatName>;
   }
 }

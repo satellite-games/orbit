@@ -4,7 +4,7 @@ import type { ElementType, NumericProperty } from '@/types/private-types';
 import { Modifier, applyModifiers } from '@/modifier';
 import { Dependency } from '@/dependency/dependency';
 import { getGameObjectKey } from './game-object.utils';
-import type { GameObjectKey, GameObjectName, GameObjectRegistry } from './types';
+import type { GameObjectKey, GameObjectName, Registry } from './types';
 
 /**
  * A game object is an entity in the game world. It is a container for data and functions.
@@ -35,7 +35,7 @@ export class GameObject implements GameObject {
   /**
    * Any child game objects that are stored on this game object.
    */
-  children: Partial<Record<GameObjectKey, Array<GameObjectRegistry[GameObjectKey]['type']>>>;
+  children: Partial<Record<GameObjectKey, Array<Registry[GameObjectKey]['type']>>>;
 
   constructor(init: {
     name: GameObjectName;
@@ -43,7 +43,7 @@ export class GameObject implements GameObject {
     owner?: GameObject | null;
     modifiers?: Modifier<any>[];
     dependencies?: Dependency<any>[];
-    children?: Partial<Record<GameObjectKey, Array<GameObjectRegistry[GameObjectKey]['type']>>>;
+    children?: Partial<Record<GameObjectKey, Array<Registry[GameObjectKey]['type']>>>;
     [key: string]: any;
   }) {
     // Perform a shallow copy of the initialization object. This also covers

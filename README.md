@@ -48,6 +48,68 @@ The [`Modifier`](/lib/modifier/modifier.ts) class allows `GameObject`s to modify
 
 The [`Event`](/lib/event/event.ts) class represents the base class for all sorts of events that may happen in the game. Events are stored in a global [`EventLog`](/lib/event/event-log.ts).
 
+## Custom Game Objects
+
+When creating your own game, you will most likely want to create custom `GameObject`s. All you need to do is create a new class that extends `GameObject` and register it:
+
+```ts
+import { GameObject } from '@satellite-games/orbit';
+
+export class Item extends GameObject {
+  declare name: string;
+  declare cost: number;
+  // ...
+}
+
+// This registers your Game Object with Orbit
+declare module '@satellite-games/orbit' {
+  interface Registry {
+    item: RegistryEntry<Item, string>;
+  }
+}
+```
+
+Registering your `GameObject` enables type-safety while working with your `GameObject`. It is even possible to achieve full type-safety for all of your `Blueprint` names, which will be the possible values of the `GameObject.name` property.
+
+```ts
+import { GameObject } from '@satellite-games/orbit';
+
+// Create a literal type with all possible item names
+export type ItemName = 'item.potion' | 'item.pouch';
+
+export class Item extends GameObject {
+  declare name: ItemName;
+  declare cost: number;
+  // ...
+}
+
+// This registers your GameObject with Orbit
+declare module '@satellite-games/orbit' {
+  interface Registry {
+    item: RegistryEntry<Item, ItemName>;
+  }
+}
+
+// This will further increase type-safety, e.g. creating and maintaining Blueprints
+// All of this is type-safe, even the names!
+const itemBlueprints: Blueprint<Item> = [
+  {
+    name: 'item.pouch',
+    cost: 200,
+  },
+  {
+    name: 'item.potion',
+    cost: 50,
+    dependencies: {
+      name: 'item.pouch',
+    } as Dependency<Item>,
+  },
+];
+```
+
+While it can be quite tedious to manually maintain a literal type that contains all possible names,
+it's easy to write a script that'll generate those literal types for you based on your master data.
+
 ## <a name='BuildingapackagewithOrbit'></a>Building a package with Orbit
 
 If you're building a package that is based on Orbit, you might want consumers to be able to access Orbit's features or types without having to install it separately. To achieve that, simply re-export everything from Orbit in your package. For example, in your main entrypoint file, do:
