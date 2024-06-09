@@ -14,6 +14,7 @@ export interface IDependency<TDependency extends GameObject | unknown> {
   /**
    * The value that the checked property should have. Numbers will be considered as a minimum value.
    * Other types will be checked for equality. `key` must be provided for the value to be checked.
+   * Note that dependencies are being checked against modified values.
    */
   value?: unknown;
   /**

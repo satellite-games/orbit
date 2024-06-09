@@ -44,8 +44,9 @@ export class Dependency<TDependency extends GameObject | unknown> implements IDe
           throw new Error(`The property "${String(this.key)}" does not exist on the dependency.`);
         } else if (typeof value === 'number' && typeof this.value === 'number') {
           // If we look for a number, a conflict will depend on whether that number is greater than
-          // `this.value`, which we consider to be the maximum allowed value.
-          return value <= this.value;
+          // `this.value`, which we consider to be the maximum allowed value. We also need to make
+          // sure to check against the modified value.
+          return dependency.getModifiedValue<typeof dependency>(this.key as never, gameObject) <= this.value;
         } else {
           // If we look for a value that is not a number, a conflict will depend on whether that value
           // is equal to `this.value`.
@@ -66,8 +67,9 @@ export class Dependency<TDependency extends GameObject | unknown> implements IDe
           throw new Error(`The property "${String(this.key)}" does not exist on the dependency.`);
         } else if (typeof value === 'number' && typeof this.value === 'number') {
           // If we look for a number, the dependency check will depend on whether that number is greater
-          // than `this.value`, which we consider to be the minimum required value.
-          return value >= this.value;
+          // than `this.value`, which we consider to be the minimum required value. We also need to make
+          // sure to check against the modified value.
+          return dependency.getModifiedValue<typeof dependency>(this.key as never, gameObject) >= this.value;
         } else {
           // If we look for a value that is not a number, the dependency will depend on whether that value
           // is equal to `this.value`.
