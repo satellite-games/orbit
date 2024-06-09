@@ -5,7 +5,7 @@ export interface IDependency<TDependency extends GameObject | unknown> {
   /**
    * The name of the game object that is being depended on.
    */
-  name: string;
+  dependencyName: string;
   /**
    * The property key of the game object that needs to be checked. If not provided,
    * the dependency will be checked for existence only.

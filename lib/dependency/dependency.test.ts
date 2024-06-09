@@ -30,7 +30,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
       }),
     ];
     const entity = new Entity({} as any);
@@ -42,7 +42,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.nonexistent',
+        dependencyName: 'dependency.nonexistent',
       }),
     ];
     const entity = new Entity({} as any);
@@ -55,7 +55,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'hello',
         value: 'world',
       }),
@@ -69,7 +69,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'hello',
         value: 'universe',
       }),
@@ -84,7 +84,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'answer',
         value: 32,
       }),
@@ -98,7 +98,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'answer',
         value: 52,
       }),
@@ -113,7 +113,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'answer',
         value: 52,
       }),
@@ -134,7 +134,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'answer',
         value: 52,
       }),
@@ -156,7 +156,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'non-existent.collection',
+        dependencyName: 'non-existent.collection',
       }),
     ];
     const entity = new Entity({} as any);
@@ -169,7 +169,7 @@ describe('regular dependencies', () => {
     const dependent = new Dependent({} as any);
     dependent.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'non-existent' as any,
         value: 'foo',
       }),
@@ -189,7 +189,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.non-existing',
+        dependencyName: 'dependency.non-existing',
         isConflict: true,
       }),
     ];
@@ -202,7 +202,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         isConflict: true,
       }),
     ];
@@ -216,7 +216,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'hello',
         value: 'universe',
         isConflict: true,
@@ -231,7 +231,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'hello',
         value: 'world',
         isConflict: true,
@@ -247,7 +247,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'answer',
         value: 52,
         isConflict: true,
@@ -262,7 +262,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'answer',
         value: 32,
         isConflict: true,
@@ -278,7 +278,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'answer',
         value: 42,
         isConflict: true,
@@ -300,7 +300,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'answer',
         value: 42,
         isConflict: true,
@@ -323,7 +323,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'non-existent.collection',
+        dependencyName: 'non-existent.collection',
         isConflict: true,
       }),
     ];
@@ -335,7 +335,7 @@ describe('conflict dependencies', () => {
     const conflict = new Conflict({} as any);
     conflict.dependencies = [
       new Dependency({
-        name: 'dependency.target',
+        dependencyName: 'dependency.target',
         key: 'non-existent' as any,
         value: 'foo',
         isConflict: true,

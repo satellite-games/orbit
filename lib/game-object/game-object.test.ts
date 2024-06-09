@@ -203,7 +203,7 @@ describe('serialize', () => {
           '{"name":"stat.power","id":"4","value":10,"max":10}',
         ],
         wagon: [
-          '{"name":"wagon.large","id":"2","modifiers":[{"targetName":"stat.speed","keys":["value"],"amount":-3}],"dependencies":[{"name":"stat.power","value":5}],"seats":200}',
+          '{"name":"wagon.large","id":"2","modifiers":[{"targetName":"stat.speed","keys":["value"],"amount":-3}],"dependencies":[{"dependencyName":"stat.power","value":5}],"seats":200}',
         ],
       },
     });

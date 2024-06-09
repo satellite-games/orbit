@@ -8,7 +8,7 @@ import type { IDependency } from './types';
  * be accessible at all.
  */
 export class Dependency<TDependency extends GameObject | unknown> implements IDependency<TDependency> {
-  declare name: GameObjectName;
+  declare dependencyName: GameObjectName;
   declare key?: keyof Omit<Pick<TDependency, NonFunctionPropertyNames<TDependency>>, 'id' | 'name'>;
   declare value?: unknown;
   declare isConflict?: boolean;
@@ -28,12 +28,12 @@ export class Dependency<TDependency extends GameObject | unknown> implements IDe
    * @param gameObject The game object that the dependency is being checked against.
    */
   check(gameObject: GameObject): boolean {
-    const dependencyTypeName = getGameObjectKey(this.name);
+    const dependencyTypeName = getGameObjectKey(this.dependencyName);
     const relevantChildren = gameObject.getChildren(dependencyTypeName) as GameObject[];
-    const dependency = relevantChildren.find((child) => child.name === this.name);
+    const dependency = relevantChildren.find((child) => child.name === this.dependencyName);
     // For better readability, we create two branches for conflicts and regular dependencies
     if (this.isConflict) {
-      const dependency = relevantChildren.find((child) => child.name === this.name);
+      const dependency = relevantChildren.find((child) => child.name === this.dependencyName);
       // If we cannot find the dependency, there is no conflict.
       if (!dependency) return true;
       // If we can find the dependency, we need to check whether we need to check a specific value.

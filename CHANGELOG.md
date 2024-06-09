@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Refactored
 
 - `applyModifiers()` is now a static function of the `Modifier` class.
+- Renamed `Dependency.name` to `Dependency.dependencyName` to prevent conflicts with `GameObject.name`.
 
 ## [0.1.0] 2024-06-09
 

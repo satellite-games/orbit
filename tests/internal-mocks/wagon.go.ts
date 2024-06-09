@@ -35,7 +35,7 @@ export const wagons: Record<Key, Blueprint<Wagon>> = {
     ],
     dependencies: [
       {
-        name: 'stat.power',
+        dependencyName: 'stat.power',
         value: 5,
       } as Dependency<Stat>,
     ],
