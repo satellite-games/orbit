@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from 'vitest';
 import { GameObject } from '.';
-import { trains } from 'internal-mocks/train.blueprints';
-import { Wagon } from 'internal-mocks/wagon.go';
-import { Train } from 'internal-mocks/train.go';
-import { Stat } from 'internal-mocks/stat.go';
-import { stats } from 'internal-mocks/stat.blueprints';
-import { wagons } from 'internal-mocks/wagon.blueprints';
+import { Wagon, wagons } from 'internal-mocks/wagon.go';
+import { Train, trains } from 'internal-mocks/train.go';
+import { Stat, stats } from 'internal-mocks/stat.go';
 import 'tests/vitest/vitest.types';
 
 describe('constructor', () => {
@@ -24,14 +21,14 @@ describe('getOwner', () => {
   it('should return the owner of the game object', () => {
     class Parent extends GameObject {}
     class Child extends GameObject {}
-    const parent = new Parent({ name: 'parent' });
-    const child = new Child({ name: 'child', owner: parent });
+    const parent = new Parent({ name: 'parent' as any });
+    const child = new Child({ name: 'child' as any, owner: parent });
     expect(child.getOwner<Parent>()).toBe(parent);
   });
 
   it("should return null if the game object doesn't have an owner", () => {
     class Child extends GameObject {}
-    const child = new Child({ name: 'child' });
+    const child = new Child({ name: 'child' as any });
     expect(child.getOwner()).toBe(null);
   });
 });
@@ -48,16 +45,16 @@ describe('setChildren/getChildren', () => {
 
   it('should return an empty array if the game object has no children', () => {
     class EmptyObject extends GameObject {}
-    const emptyObject = new EmptyObject({ name: 'parent' });
+    const emptyObject = new EmptyObject({ name: 'parent' as any });
     expect(emptyObject.getChildren('child')).toEqual([]);
   });
 
   it('should throw an error when attempting to set an invalid collection of children', () => {
     class InvalidChild extends GameObject {}
     const thomas = new Train(trains.thomas);
-    const invalidChildren = [new InvalidChild({ name: 'invalid-child' })];
+    const invalidChildren = [new InvalidChild({ name: 'invalid-child' as any })];
     expect(() => {
-      thomas.setChildren(invalidChildren);
+      thomas.setChildren(invalidChildren as any);
     }).toThrowError();
   });
 });
@@ -182,8 +179,8 @@ describe('serialize', () => {
       };
     }
     class WithoutChildren extends GameObject {}
-    const withChildren = new WithChildren({ name: 'with-children', id: '1234' });
-    const withoutChildren = new WithoutChildren({ name: 'without-children', id: '5678' });
+    const withChildren = new WithChildren({ name: 'with-children' as any, id: '1234' });
+    const withoutChildren = new WithoutChildren({ name: 'without-children' as any, id: '5678' });
     expect(withChildren.serialize()).toBe('{"name":"with-children","id":"1234","children":{"trains":[]}}');
     expect(withoutChildren.serialize()).toBe('{"name":"without-children","id":"5678"}');
   });
@@ -222,7 +219,7 @@ describe('serialize', () => {
         return object;
       }
     }
-    const customGameObject = new CustomGameObject({ name: 'custom-game-object', id: '1' });
+    const customGameObject = new CustomGameObject({ name: 'custom-game-object' as any, id: '1' });
     expect(customGameObject.serialize()).toBe('{"name":"custom-game-object","id":"1","number":42}');
   });
 });

@@ -1,4 +1,4 @@
-import { GameObject, type Blueprint } from '@/game-object';
+import { GameObject, type Blueprint, type RegistryEntry } from '@/game-object';
 import type { Modifier } from '@/modifier';
 import type { Stat } from './stat.go';
 import type { Dependency } from '@/dependency';
@@ -42,7 +42,7 @@ export const wagons: Record<Key, Blueprint<Wagon>> = {
   },
 };
 
-declare module '@/registry' {
+declare module '@/game-object' {
   interface Registry {
     wagon: RegistryEntry<Wagon, WagonName>;
   }

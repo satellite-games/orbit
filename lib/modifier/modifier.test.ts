@@ -1,11 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { Modifier } from './modifier';
-import { Train } from 'internal-mocks/train.go';
-import { Stat } from 'internal-mocks/stat.go';
-import { stats } from 'internal-mocks/stat.blueprints';
-import { Wagon } from 'internal-mocks/wagon.go';
-import { wagons } from 'internal-mocks/wagon.blueprints';
-import { trains } from 'internal-mocks/train.blueprints';
+import { Train, trains } from 'internal-mocks/train.go';
+import { Stat, stats } from 'internal-mocks/stat.go';
+import { Wagon, wagons } from 'internal-mocks/wagon.go';
 
 describe('integrated modification', () => {
   it('should return the unmodified value', () => {

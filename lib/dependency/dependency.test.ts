@@ -4,15 +4,15 @@ import { GameObject } from '../game-object';
 import { Dependency } from './dependency';
 
 class UnrelatedObject extends GameObject {
-  name = 'unrelated.object';
+  name = 'unrelated.object' as any;
 }
 class DependencyTarget extends GameObject {
-  name = 'dependency.target';
+  name = 'dependency.target' as any;
   hello = 'world';
   answer = 42;
 }
 class Entity extends GameObject {
-  name = 'entity';
+  name = 'entity' as any;
   children = {
     unrelated: [new UnrelatedObject({} as any)],
     dependency: [new DependencyTarget({} as any)],
@@ -21,7 +21,7 @@ class Entity extends GameObject {
 
 describe('regular dependencies', () => {
   class Dependent extends GameObject {
-    name = 'depending.object';
+    name = 'depending.object' as any;
     declare dependencies: Dependency<DependencyTarget>[];
   }
 
@@ -137,7 +137,7 @@ describe('regular dependencies', () => {
 
 describe('conflict dependencies', () => {
   class Conflict extends GameObject {
-    name = 'conflicting.object';
+    name = 'conflicting.object' as any;
     declare dependencies: Dependency<DependencyTarget>[];
   }
 

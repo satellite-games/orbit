@@ -1,4 +1,4 @@
-import { GameObject, type Blueprint } from '@/game-object';
+import { GameObject, type Blueprint, type RegistryEntry } from '@/game-object';
 
 type StatName = 'stat.speed' | 'stat.power';
 
@@ -23,7 +23,7 @@ export const stats: Record<Key, Blueprint<Stat>> = {
   },
 };
 
-declare module '@/registry' {
+declare module '@/game-object' {
   interface Registry {
     stat: RegistryEntry<Stat, StatName>;
   }
