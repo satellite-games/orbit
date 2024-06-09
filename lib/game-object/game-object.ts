@@ -5,7 +5,6 @@ import { Modifier } from '@/modifier';
 import { Dependency } from '@/dependency/dependency';
 import { getGameObjectKey } from './game-object.utils';
 import type { GameObjectKey, GameObjectName, Registry } from './types';
-import type { NonFunctionPropertyNames } from '@/types/public-types';
 
 /**
  * A game object is an entity in the game world. It is a container for data and functions.
