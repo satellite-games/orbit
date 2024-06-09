@@ -1,4 +1,4 @@
-import type { NonFunctionPropertyNames } from '@/types/private-types';
+import type { NonFunctionPropertyNames } from '@/types/public-types';
 import type { GameObject } from './game-object';
 
 /**
@@ -34,9 +34,10 @@ export type Saved<TGameObject extends GameObject, TOmitted extends keyof TGameOb
  * An entry of `Registry`. Use this type together with `Registry`
  * to register new `GameObject`s.
  */
-export type RegistryEntry<T extends GameObject, U extends string> = {
-  type: T;
-  names: U[];
+export type RegistryEntry<TGameObject extends GameObject, TName extends string, TTag extends string = string> = {
+  type: TGameObject;
+  names: TName[];
+  tags?: TTag[];
 };
 
 /**

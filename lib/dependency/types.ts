@@ -1,4 +1,4 @@
-import type { NonFunctionPropertyNames } from '@/types/private-types';
+import type { NonFunctionPropertyNames } from '@/types/public-types';
 import type { GameObject } from '../game-object';
 
 export interface IDependency<TDependency extends GameObject | unknown> {

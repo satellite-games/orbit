@@ -5,6 +5,7 @@ import { Modifier } from '@/modifier';
 import { Dependency } from '@/dependency/dependency';
 import { getGameObjectKey } from './game-object.utils';
 import type { GameObjectKey, GameObjectName, Registry } from './types';
+import type { NonFunctionPropertyNames } from '@/types/public-types';
 
 /**
  * A game object is an entity in the game world. It is a container for data and functions.
@@ -46,6 +47,8 @@ export class GameObject implements GameObject {
     children?: Partial<Record<GameObjectKey, Array<Registry[GameObjectKey]['type']>>>;
     [key: string]: any;
   }) {
+    // Assign default values
+    Object.assign(this, this.getDefaultValues());
     // Perform a shallow copy of the initialization object. This also covers
     // for any child classes that may have additional properties.
     Object.assign(this, init);
@@ -56,6 +59,17 @@ export class GameObject implements GameObject {
     this.modifiers = init.modifiers?.map((modifier) => new Modifier(modifier));
     this.dependencies = init.dependencies?.map((dependency) => new Dependency(dependency));
     this.children = init.children ?? {};
+  }
+
+  /**
+   * Returns default values for the game object. You can override this method in subclasses
+   * to provide default values for the game object's properties. This helps work around an
+   * issue with JavaScript's inheritance where value assignments in class field declarations
+   * are executed after parent constructor calls, which leads to default values in sub classes
+   * to always win over assignments happening in upstream constructors.
+   */
+  getDefaultValues(): Partial<Pick<GameObject, NonFunctionPropertyNames<GameObject>>> {
+    return {};
   }
 
   /**

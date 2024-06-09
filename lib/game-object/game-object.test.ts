@@ -4,6 +4,7 @@ import { GameObject } from '.';
 import { Wagon, wagons } from 'internal-mocks/wagon.go';
 import { Train, trains } from 'internal-mocks/train.go';
 import { Stat, stats } from 'internal-mocks/stat.go';
+import type { NonFunctionPropertyNames } from '@/types/public-types';
 
 describe('constructor', () => {
   it('should properly create a blueprint and its corresponding game objects', () => {
@@ -13,6 +14,30 @@ describe('constructor', () => {
     expect(thomas.id).toBeDefined();
     expect(thomas.makeNoise()).toBe(trains.thomas.noise);
     expect(thomas.length).toBe(1);
+  });
+
+  it('should override the default values', () => {
+    class CustomTrain extends Train {
+      getDefaultValues(): Partial<Pick<CustomTrain, NonFunctionPropertyNames<CustomTrain>>> {
+        return {
+          noise: 'chug chug',
+        };
+      }
+    }
+    const thomas = new CustomTrain({ ...trains.thomas });
+    expect(thomas.makeNoise()).toBe('toot toot');
+  });
+
+  it('should use the default value if not overridden', () => {
+    class CustomTrain extends Train {
+      getDefaultValues(): Partial<Pick<CustomTrain, NonFunctionPropertyNames<CustomTrain>>> {
+        return {
+          noise: 'chug chug',
+        };
+      }
+    }
+    const thomas = new CustomTrain({ name: 'train.thomas' });
+    expect(thomas.makeNoise()).toEqual('chug chug');
   });
 });
 

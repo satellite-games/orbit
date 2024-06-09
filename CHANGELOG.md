@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Added
+
+- Implemented `GameObject.getDefaultValues()` method to allow child classes to assign default values for their properties. This circumvents an issue with JavaScript's inheritance where value assignments in class field declarations are executed after parent constructor calls, which leads to default values in sub classes to always be applied.
+
 ### Fixed
 
 - `Dependency` now checks against modified values instead of actual values when checking numeric properties.

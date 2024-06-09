@@ -1,6 +1,7 @@
-import type { NonFunctionPropertyNames, NumericProperty } from '@/types/private-types';
+import type { NumericProperty } from '@/types/private-types';
 import type { GameObject } from '@/game-object';
 import type { GameObjectName } from '@/main';
+import type { NonFunctionPropertyNames } from '@/types/public-types';
 /**
  * Modifiers are used to increase or decrease specific values of a game object.
  * They are commonly used to modify character stats like primary or secondary attributes
