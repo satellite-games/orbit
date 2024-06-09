@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `Dependency` now checks against modified values instead of actual values when checking numeric properties.
 
+### Refactored
+
+- `applyModifiers()` is now a static function of the `Modifier` class.
+
 ## [0.1.0] 2024-06-09
 
 🌟 Initial release.

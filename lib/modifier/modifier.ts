@@ -36,37 +36,37 @@ export class Modifier<TModifiedGameObject extends GameObject | unknown> {
   getModifiedKeys(): NumericProperty<TModifiedGameObject>[] {
     return Array.isArray(this.keys) ? this.keys : [this.keys];
   }
-}
 
-/**
- * Returns the modified value of the specified key by applying all matching modifiers to the
- * given game object.
- * @param gameObject The game object to get the modified value for.
- * @param key The key of the value to get the modified value for.
- * @param modifiers The modifiers to apply to the value. Will be filtered for matching modifiers.
- * @returns The modified value.
- */
-export const applyModifiers = <TGameObject extends GameObject>(
-  gameObject: TGameObject,
-  key: NumericProperty<TGameObject>,
-  modifiers: Modifier<TGameObject>[],
-) => {
-  const unmodifiedValue = gameObject[key as keyof typeof gameObject];
-  if (typeof unmodifiedValue !== 'number') {
-    throw new Error(
-      `${gameObject.constructor.name}.${key as string} is not a numeric property and thus cannot be modified.`,
-    );
-  }
-  const matchingModifiers = modifiers.filter((modifier) => {
-    if (modifier.targetId) {
-      return modifier.targetId === gameObject.id && modifier.getModifiedKeys().includes(key);
-    } else {
-      return modifier.targetName === gameObject.name && modifier.getModifiedKeys().includes(key);
+  /**
+   * Returns the modified value of the specified key by applying all matching modifiers to the
+   * given game object.
+   * @param gameObject The game object to get the modified value for.
+   * @param key The key of the value to get the modified value for.
+   * @param modifiers The modifiers to apply to the value. Will be filtered for matching modifiers.
+   * @returns The modified value.
+   */
+  static applyModifiers<TGameObject extends GameObject>(
+    gameObject: TGameObject,
+    key: NumericProperty<TGameObject>,
+    modifiers: Modifier<TGameObject>[],
+  ) {
+    const unmodifiedValue = gameObject[key as keyof typeof gameObject];
+    if (typeof unmodifiedValue !== 'number') {
+      throw new Error(
+        `${gameObject.constructor.name}.${key as string} is not a numeric property and thus cannot be modified.`,
+      );
     }
-  });
-  let modifiedValue = unmodifiedValue as number;
-  for (const modifier of matchingModifiers) {
-    modifiedValue += modifier.amount;
+    const matchingModifiers = modifiers.filter((modifier) => {
+      if (modifier.targetId) {
+        return modifier.targetId === gameObject.id && modifier.getModifiedKeys().includes(key);
+      } else {
+        return modifier.targetName === gameObject.name && modifier.getModifiedKeys().includes(key);
+      }
+    });
+    let modifiedValue = unmodifiedValue as number;
+    for (const modifier of matchingModifiers) {
+      modifiedValue += modifier.amount;
+    }
+    return modifiedValue;
   }
-  return modifiedValue;
-};
+}

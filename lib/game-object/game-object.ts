@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v4 as uuidv4 } from 'uuid';
 import type { ElementType, NumericProperty } from '@/types/private-types';
-import { Modifier, applyModifiers } from '@/modifier';
+import { Modifier } from '@/modifier';
 import { Dependency } from '@/dependency/dependency';
 import { getGameObjectKey } from './game-object.utils';
 import type { GameObjectKey, GameObjectName, Registry } from './types';
@@ -205,7 +205,7 @@ export class GameObject implements GameObject {
       targetName: this.name,
       targetId: this.id,
     });
-    return applyModifiers<TGameObject>(
+    return Modifier.applyModifiers<TGameObject>(
       this as unknown as TGameObject,
       key,
       modifiers ?? (this.modifiers as Modifier<TGameObject>[]),
