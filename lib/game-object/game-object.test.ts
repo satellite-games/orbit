@@ -4,7 +4,6 @@ import { GameObject } from '.';
 import { Wagon, wagons } from 'internal-mocks/wagon.go';
 import { Train, trains } from 'internal-mocks/train.go';
 import { Stat, stats } from 'internal-mocks/stat.go';
-import 'tests/vitest/vitest.types';
 
 describe('constructor', () => {
   it('should properly create a blueprint and its corresponding game objects', () => {
