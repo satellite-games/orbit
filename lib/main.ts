@@ -7,3 +7,4 @@ export * from './game-object';
 export * from './dependency';
 export * from './modifier';
 export * from './event';
+export * from './types/public-types';
