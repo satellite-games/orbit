@@ -7,6 +7,7 @@ import { Train } from 'internal-mocks/train.go';
 import { Stat } from 'internal-mocks/stat.go';
 import { stats } from 'internal-mocks/stat.blueprints';
 import { wagons } from 'internal-mocks/wagon.blueprints';
+import 'tests/vitest/vitest.types';
 
 describe('constructor', () => {
   it('should properly create a blueprint and its corresponding game objects', () => {

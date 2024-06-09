@@ -30,3 +30,37 @@ export type Saved<TGameObject extends GameObject, TOmitted extends keyof TGameOb
   'id' | 'owner' | 'children'
 > &
   Required<Pick<TGameObject, 'id'>>;
+/**
+ * An entry of `GameObjectRegistry`. Use this type together with `GameObjectRegistry`
+ * to register new `GameObject`s.
+ */
+export type GameObjectRegistryEntry<T extends GameObject, U extends string> = {
+  type: T;
+  names: U[];
+};
+
+/**
+ * The registry of `GameObject`s. Use this interface together with `GameObjectRegistryEntry`
+ * to register new `GameObject`s.
+ * @example
+ * class MyGameObject extends GameObject {
+ *   // ...
+ * }
+ * type MyGameObjectName = 'my-game-object.foo' | 'my-game-object.bar';
+ *
+ * interface GameObjectRegistry {
+ *   'my-game-object': GameObjectRegistryEntry<MyGameObject, MyGameObjectName>;
+ * }
+ */
+export interface GameObjectRegistry {}
+
+/**
+ * The key of `GameObjectRegistry`. Represents the unique key of a `GameObject` class.
+ */
+export type GameObjectKey = keyof GameObjectRegistry;
+
+/**
+ * Represents all possible values for a `GameObject`s `name` property. Usually, this is a union
+ * of all blueprint names of a `GameObject`.
+ */
+export type GameObjectName = GameObjectRegistry[GameObjectKey]['names'][number];

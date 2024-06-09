@@ -1,5 +1,5 @@
-import type { NonFunctionPropertyNames, GameObjectName } from '@/types/private-types';
-import { GameObject, getGameObjectTypeName } from '@/game-object';
+import type { NonFunctionPropertyNames } from '@/types/private-types';
+import { GameObject, getGameObjectKey, type GameObjectName } from '@/game-object';
 import type { IDependency } from './types';
 
 /**
@@ -28,7 +28,7 @@ export class Dependency<TDependency extends GameObject | unknown> implements IDe
    * @param gameObject The game object that the dependency is being checked against.
    */
   check(gameObject: GameObject): boolean {
-    const dependencyTypeName = getGameObjectTypeName(this.name);
+    const dependencyTypeName = getGameObjectKey(this.name);
     const relevantChildren = gameObject.getChildren(dependencyTypeName) as GameObject[];
     const dependency = relevantChildren.find((child) => child.name === this.name);
     // For better readability, we create two branches for conflicts and regular dependencies

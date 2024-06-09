@@ -1,5 +1,6 @@
 import type { NonFunctionPropertyNames, NumericProperty } from '@/types/private-types';
 import type { GameObject } from '@/game-object';
+import type { GameObjectName } from '@/main';
 /**
  * Modifiers are used to increase or decrease specific values of a game object.
  * They are commonly used to modify character stats like primary or secondary attributes
@@ -9,7 +10,7 @@ export class Modifier<TModifiedGameObject extends GameObject | unknown> {
   /*
    * The name of the game object that is being modified.
    */
-  declare targetName: string;
+  declare targetName: GameObjectName;
   /**
    * The unique identifier of the game object that is being modified. This is optional. If none
    * is provided, the modifier will be applied to all game objects matching `modifiedName`.

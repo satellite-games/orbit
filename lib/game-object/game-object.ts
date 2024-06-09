@@ -1,15 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v4 as uuidv4 } from 'uuid';
-import type {
-  ElementType,
-  NumericProperty,
-  GameObjectName,
-  GameObjectRegistry,
-  GameObjectTypeName,
-} from '@/types/private-types';
+import type { ElementType, NumericProperty } from '@/types/private-types';
 import { Modifier, applyModifiers } from '@/modifier';
 import { Dependency } from '@/dependency/dependency';
-import { getGameObjectTypeName } from './game-object.utils';
+import { getGameObjectKey } from './game-object.utils';
+import type { GameObjectKey, GameObjectName, GameObjectRegistry } from './types';
 
 /**
  * A game object is an entity in the game world. It is a container for data and functions.
@@ -20,7 +15,7 @@ export class GameObject implements GameObject {
    * The name of the game object's blueprint. This name is a unique key that identifies
    * the blueprint in the game database.
    */
-  name: string;
+  name: GameObjectName;
   /**
    * The unique identifier of the game object.
    */
@@ -40,7 +35,7 @@ export class GameObject implements GameObject {
   /**
    * Any child game objects that are stored on this game object.
    */
-  children: Partial<Record<GameObjectTypeName, Array<GameObjectRegistry[GameObjectTypeName]>>>;
+  children: Partial<Record<GameObjectKey, Array<GameObjectRegistry[GameObjectKey]['type']>>>;
 
   constructor(init: {
     name: GameObjectName;
@@ -48,7 +43,7 @@ export class GameObject implements GameObject {
     owner?: GameObject | null;
     modifiers?: Modifier<any>[];
     dependencies?: Dependency<any>[];
-    children?: Partial<Record<GameObjectTypeName, Array<GameObjectRegistry[GameObjectTypeName]>>>;
+    children?: Partial<Record<GameObjectKey, Array<GameObjectRegistry[GameObjectKey]['type']>>>;
     [key: string]: any;
   }) {
     // Perform a shallow copy of the initialization object. This also covers
@@ -90,8 +85,8 @@ export class GameObject implements GameObject {
     TGameObject extends GameObject,
     TChildren extends ElementType<TGameObject['children'][keyof TGameObject['children']]>,
   >(children: TChildren[]) {
-    const collectionName = getGameObjectTypeName((children[0] as GameObject).name);
-    const oldChildren = this.children[collectionName as GameObjectTypeName];
+    const collectionName = getGameObjectKey((children[0] as GameObject).name);
+    const oldChildren = this.children[collectionName as GameObjectKey];
     if (!oldChildren) {
       throw new Error(
         `Collection name '${collectionName}' is not a valid child collection for game object '${this.name}'.`,
@@ -101,7 +96,7 @@ export class GameObject implements GameObject {
       throw new Error('Cannot set an empty array of children on a game object.');
     }
     for (const child of children) (child as GameObject).owner = this;
-    this.children[collectionName] = children as unknown as typeof oldChildren;
+    this.children[collectionName as keyof typeof this.children] = children as unknown as typeof oldChildren;
   }
 
   /**
@@ -112,7 +107,7 @@ export class GameObject implements GameObject {
     TGameObject extends GameObject,
     TChild extends ElementType<TGameObject['children'][keyof TGameObject['children']]>,
   >(child: TChild) {
-    const collectionName = getGameObjectTypeName((child as GameObject).name);
+    const collectionName = getGameObjectKey((child as GameObject).name);
     const children = this.getChildren<TGameObject, TChild>(collectionName);
     children.push(child);
     (child as GameObject).owner = this;
@@ -127,7 +122,7 @@ export class GameObject implements GameObject {
     TGameObject extends GameObject,
     TChild extends ElementType<TGameObject['children'][keyof TGameObject['children']]>,
   >(child: TChild) {
-    const collectionName = getGameObjectTypeName((child as GameObject).name);
+    const collectionName = getGameObjectKey((child as GameObject).name);
     const children = this.getChildren<TGameObject, TChild>(collectionName);
     const index = children.indexOf(child);
     if (index === -1) {
@@ -145,7 +140,7 @@ export class GameObject implements GameObject {
    * @param name
    */
   findChildByName<TGameObject extends GameObject>(name: string): TGameObject | undefined {
-    for (const collection of Object.values(this.children)) {
+    for (const collection of Object.values(this.children as Record<string, GameObject[]>)) {
       const child = collection?.find((child) => (child as GameObject).name === name);
       if (child) return child as TGameObject;
     }
@@ -158,7 +153,7 @@ export class GameObject implements GameObject {
    * @param id The unique identifier of the child to find.
    */
   findChildById<TGameObject extends GameObject>(id: string): TGameObject | undefined {
-    for (const collection of Object.values(this.children)) {
+    for (const collection of Object.values(this.children as Record<string, GameObject[]>)) {
       const child = collection?.find((child) => (child as GameObject).id === id);
       if (child) return child as TGameObject;
     }
@@ -177,7 +172,7 @@ export class GameObject implements GameObject {
     let modifiers: Modifier<TGameObject>[] = [...(this.modifiers ?? [])];
 
     // Recursively get all modifiers from this game object's children
-    for (const childArray of Object.values(this.children)) {
+    for (const childArray of Object.values(this.children as Record<string, GameObject[]>)) {
       if (!childArray) continue;
       for (const child of childArray) {
         modifiers = modifiers.concat(child.getModifiersRecursively());
@@ -263,9 +258,9 @@ export class GameObject implements GameObject {
     } else {
       // Or serialize children
       for (const key in state.children) {
-        const children = state.children[key as any as keyof typeof state.children];
-        if (!children) continue;
-        preSerializedState.children[key] = children.map((child) => child.serialize());
+        const collection = (state.children as Record<string, GameObject[]>)[key];
+        if (!collection) continue;
+        preSerializedState.children[key] = collection.map((child: GameObject) => child.serialize());
       }
     }
     return JSON.stringify(preSerializedState);
