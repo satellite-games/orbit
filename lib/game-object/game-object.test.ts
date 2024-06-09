@@ -18,7 +18,7 @@ describe('constructor', () => {
 
   it('should override the default values', () => {
     class CustomTrain extends Train {
-      getDefaultValues(): Partial<Pick<CustomTrain, NonFunctionPropertyNames<CustomTrain>>> {
+      defaultValues(): Partial<CustomTrain> {
         return {
           noise: 'chug chug',
         };
@@ -30,7 +30,7 @@ describe('constructor', () => {
 
   it('should use the default value if not overridden', () => {
     class CustomTrain extends Train {
-      getDefaultValues(): Partial<Pick<CustomTrain, NonFunctionPropertyNames<CustomTrain>>> {
+      defaultValues(): Partial<CustomTrain> {
         return {
           noise: 'chug chug',
         };

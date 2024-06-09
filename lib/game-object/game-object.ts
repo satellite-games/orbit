@@ -48,7 +48,7 @@ export class GameObject implements GameObject {
     [key: string]: any;
   }) {
     // Assign default values
-    Object.assign(this, this.getDefaultValues());
+    Object.assign(this, this.defaultValues());
     // Perform a shallow copy of the initialization object. This also covers
     // for any child classes that may have additional properties.
     Object.assign(this, init);
@@ -62,13 +62,24 @@ export class GameObject implements GameObject {
   }
 
   /**
-   * Returns default values for the game object. You can override this method in subclasses
-   * to provide default values for the game object's properties. This helps work around an
-   * issue with JavaScript's inheritance where value assignments in class field declarations
-   * are executed after parent constructor calls, which leads to default values in sub classes
-   * to always win over assignments happening in upstream constructors.
+   * The default values for the game object. You can override this getter in subclasses
+   * to provide default values for the game object's properties. This helps work around
+   * a limitation with JavaScript's inheritance where value assignments in class field
+   * declarations are executed after parent constructor calls, which leads to default values
+   * in sub classes to always win over assignments happening in upstream constructors.
+   * @example
+   * class Item extends GameObject {
+   *   cost: number;
+   *   defaultValues(): Partial<Item> {
+   *     return {
+   *       cost: 0,
+   *     };
+   *   }
+   * }
+   * new Item({ name: 'item', cost: 10 }); // cost will be 10
+   * new Item({ name: 'item' }); // cost will be 0
    */
-  getDefaultValues(): Partial<Pick<GameObject, NonFunctionPropertyNames<GameObject>>> {
+  defaultValues(): Partial<GameObject> {
     return {};
   }
 
