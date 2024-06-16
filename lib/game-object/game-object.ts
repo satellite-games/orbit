@@ -273,24 +273,69 @@ export class GameObject implements GameObject {
   }
 
   /**
+   * Returns a deep non-circular copy of the game object that can be serialized.
+   * All `owner` references are removed recursively to avoid circular references.
+   * Does not mutate the original game object.
+   */
+  getNonCircularCopy<TGameObject extends GameObject>(): Omit<TGameObject, 'owner'> {
+    // Perform a shallow copy of the object and its children
+    const copy: { children: Record<string, GameObject[]>; owner?: GameObject | null } = Object.create(
+      Object.getPrototypeOf(this),
+      Object.getOwnPropertyDescriptors(this),
+    );
+    copy.children = { ...this.children } as Record<string, GameObject[]>;
+    delete copy.owner;
+    // Check whether the game object has any children
+    for (const key in copy.children) {
+      const collection = copy.children[key as keyof typeof copy.children];
+      if (!collection) continue;
+      copy.children[key as keyof typeof copy.children] = collection.map(
+        (child) => child.getNonCircularCopy<typeof child>() as typeof child,
+      );
+    }
+
+    return copy as unknown as Omit<TGameObject, 'owner'>;
+  }
+
+  /**
    * Serializes the game object. This is useful for saving the game state to a file.
    */
-  serialize(): string {
-    const state: typeof this = { ...this };
-    const preSerializedState: Record<string, any> = this.beforeSerialize(state);
-    // Remove owner reference
-    delete preSerializedState.owner;
-    if (Object.keys(state.children).length === 0) {
-      // Remove empty children objects
-      delete preSerializedState.children;
-    } else {
-      // Or serialize children
+  async serialize(): Promise<string> {
+    let state: Record<string, any> = this.getNonCircularCopy();
+
+    // Call `beforeSerialize` hook
+    state = this.beforeSerialize(state);
+
+    // Create a stack for depth-first traversal
+    let stack: GameObject[] = [];
+    if (state.children && Object.keys(state.children).length > 0) {
       for (const key in state.children) {
         const collection = (state.children as Record<string, GameObject[]>)[key];
-        if (!collection) continue;
-        preSerializedState.children[key] = collection.map((child: GameObject) => child.serialize());
+        if (collection) {
+          stack = stack.concat(collection);
+        }
+      }
+    } else delete state.children;
+
+    // Traverse the children
+    while (stack.length > 0) {
+      const child = stack.pop();
+      if (!child) continue;
+      if (!child.serialize) continue;
+      // if (!child.serialize) throw new Error(`Child ${child.name} does not have a serialize method.`);
+      const serializedChild = await child.serialize();
+      // Replace the child object with its serialized string
+      for (const key in state.children) {
+        const collection = (state.children as Record<string, GameObject[]>)[key];
+        if (collection) {
+          const index = collection.indexOf(child);
+          if (index !== -1) {
+            collection[index] = serializedChild as any;
+          }
+        }
       }
     }
-    return JSON.stringify(preSerializedState);
+
+    return JSON.stringify(state);
   }
 }

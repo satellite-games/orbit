@@ -8,6 +8,9 @@ type WagonName = 'wagon.small' | 'wagon.large';
 export class Wagon extends GameObject {
   declare name: WagonName;
   declare seats: number;
+  children: { stat: Stat[] } = {
+    stat: [],
+  };
 }
 type Key = 'small' | 'large';
 

@@ -4,7 +4,6 @@ import { GameObject } from '.';
 import { Wagon, wagons } from 'internal-mocks/wagon.go';
 import { Train, trains } from 'internal-mocks/train.go';
 import { Stat, stats } from 'internal-mocks/stat.go';
-import type { NonFunctionPropertyNames } from '@/types/public-types';
 
 describe('constructor', () => {
   it('should properly create a blueprint and its corresponding game objects', () => {
@@ -152,7 +151,7 @@ describe('findChildById', () => {
 describe('getModifiersRecursively', () => {
   it('should return all modifiers of the game object and its children', () => {
     class RecursiveWagon extends Wagon {
-      children: Record<'wagon', Wagon[]> = { wagon: [] };
+      children: { wagon: Wagon[]; stat: Stat[] } = { wagon: [], stat: [] };
     }
     const train = new Train(trains.thomas);
     const wagon1 = new RecursiveWagon(wagons.large);
@@ -193,19 +192,48 @@ describe('getModifiedValue', () => {
   });
 });
 
+describe('getNonCircularCopy', () => {
+  it('should return a copy of the game object without any owner references', () => {
+    const train = new Train(trains.thomas);
+    const wagon = new Wagon(wagons.small);
+    train.addChild<Train, Wagon>(wagon);
+    expect(train.findChildByName<Wagon>('wagon.small')?.getOwner()).toBe(train);
+    const unwrappedTrain = train.getNonCircularCopy<typeof train>();
+    expect(unwrappedTrain.findChildByName<Wagon>('wagon.small')?.getOwner()).toBe(undefined);
+    // Should not modify the original object or any of its children
+    expect(train.findChildByName<Wagon>('wagon.small')?.getOwner()).toBe(train);
+  });
+
+  it('should return a copy of a deep game object without any owner references', () => {
+    const train = new Train(trains.thomas);
+    const wagon = new Wagon(wagons.small);
+    const stat = new Stat(stats.speed);
+    wagon.addChild<Wagon, Stat>(stat);
+    train.addChild<Train, Wagon>(wagon);
+    expect(train.findChildById(wagon.id)?.getOwner()).toBe(train);
+    expect(wagon.findChildById(stat.id)?.getOwner()).toBe(wagon);
+    const unwrappedTrain = train.getNonCircularCopy<typeof train>();
+    expect(unwrappedTrain.findChildById(wagon.id)?.getOwner()).toBe(undefined);
+    expect(unwrappedTrain.findChildById(wagon.id)?.findChildById(stat.id)?.getOwner()).toBe(undefined);
+    // Should not modify the original object or any of its children
+    expect(train.findChildById(wagon.id)?.getOwner()).toBe(train);
+    expect(wagon.findChildById(stat.id)?.getOwner()).toBe(wagon);
+  });
+});
+
 describe('serialize', () => {
-  it("should properly serialize the game object's properties without functions and getters", () => {
+  it("should properly serialize the game object's properties without functions and getters", async () => {
     const train = new Train({
       ...trains.thomas,
       id: '1234',
     });
-    const serializedTrain = train.serialize();
+    const serializedTrain = await train.serialize();
     expect(serializedTrain).toBe(
       '{"name":"train.thomas","id":"1234","children":{"stat":[],"wagon":[]},"noise":"toot toot"}',
     );
   });
 
-  it('should strip empty children from the game object, but keep non-empty children', () => {
+  it('should strip empty children from the game object, but keep non-empty children', async () => {
     class WithChildren extends GameObject {
       children: Record<string, any[]> = {
         trains: [],
@@ -214,36 +242,40 @@ describe('serialize', () => {
     class WithoutChildren extends GameObject {}
     const withChildren = new WithChildren({ name: 'with-children' as any, id: '1234' });
     const withoutChildren = new WithoutChildren({ name: 'without-children' as any, id: '5678' });
-    expect(withChildren.serialize()).toBe('{"name":"with-children","id":"1234","children":{"trains":[]}}');
-    expect(withoutChildren.serialize()).toBe('{"name":"without-children","id":"5678"}');
+    expect(await withChildren.serialize()).toBe('{"name":"with-children","id":"1234","children":{"trains":[]}}');
+    expect(await withoutChildren.serialize()).toBe('{"name":"without-children","id":"5678"}');
   });
 
-  it('should be able to serialize a deep object with circular references', () => {
+  it('should be able to serialize a deep object with circular references', async () => {
     const train = new Train({ ...trains.thomas, id: '1' });
     const wagon = new Wagon({ ...wagons.large, id: '2' });
+    const stat = new Stat({ ...stats.speed, id: '3' });
+    wagon.addChild<Wagon, Stat>(stat);
     train.addChild<Train, Wagon>(wagon);
-    train.setChildren<Train, Stat>([new Stat({ ...stats.speed, id: '3' }), new Stat({ ...stats.power, id: '4' })]);
+    train.setChildren<Train, Stat>([new Stat({ ...stats.speed, id: '4' }), new Stat({ ...stats.power, id: '5' })]);
     // To make the assertion more readable we serialize and then perform a
     // flat parse. We don't perform an actual deserialization since it does
     // a bunch of stuff we're not interested in.
-    const serialized = train.serialize();
+    const serialized = await train.serialize();
     expect(JSON.parse(serialized)).toEqual({
       name: 'train.thomas',
       id: '1',
       noise: 'toot toot',
       children: {
         stat: [
-          '{"name":"stat.speed","id":"3","value":5,"max":10}',
-          '{"name":"stat.power","id":"4","value":10,"max":10}',
+          '{"name":"stat.speed","id":"4","value":5,"max":10}',
+          '{"name":"stat.power","id":"5","value":10,"max":10}',
         ],
         wagon: [
-          '{"name":"wagon.large","id":"2","modifiers":[{"targetName":"stat.speed","keys":["value"],"amount":-3}],"dependencies":[{"dependencyName":"stat.power","value":5}],"seats":200}',
+          '{"name":"wagon.large","id":"2","modifiers":[{"targetName":"stat.speed","keys":["value"],"amount":-3}],"dependencies":[{"dependencyName":"stat.power","value":5}],"children":{"stat":["{\\"name\\":\\"stat.speed\\",\\"id\\":\\"3\\",\\"value\\":5,\\"max\\":10}"]},"seats":200}',
         ],
       },
     });
+    // Should not modify the original object or any of its children
+    expect(train.getChildren('wagon')[0]).toBe(wagon);
   });
 
-  it('should use an overridden beforeSerialize hook', () => {
+  it('should use an overridden beforeSerialize hook', async () => {
     class CustomGameObject extends GameObject {
       number = 24;
 
@@ -253,6 +285,6 @@ describe('serialize', () => {
       }
     }
     const customGameObject = new CustomGameObject({ name: 'custom-game-object' as any, id: '1' });
-    expect(customGameObject.serialize()).toBe('{"name":"custom-game-object","id":"1","number":42}');
+    expect(await customGameObject.serialize()).toBe('{"name":"custom-game-object","id":"1","number":42}');
   });
 });
