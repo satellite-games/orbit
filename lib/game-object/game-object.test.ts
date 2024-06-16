@@ -99,6 +99,15 @@ describe('addChild/removeChild', () => {
     train.removeChild<Train, Wagon>(wagon2);
     expect(train.getChildren<Train, Wagon>('wagon')).toEqual([]);
   });
+
+  it('should fail when attempting to add an invalid child', () => {
+    class InvalidChild extends GameObject {}
+    const train = new Train(trains.thomas);
+    const invalidChild = new InvalidChild({ name: 'invalid.child' as any });
+    expect(() => {
+      train.addChild(invalidChild as any);
+    }).toThrowError();
+  });
 });
 
 describe('findChildByName', () => {

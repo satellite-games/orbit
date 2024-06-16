@@ -132,6 +132,10 @@ export class GameObject implements GameObject {
     TChild extends ElementType<TGameObject['children'][keyof TGameObject['children']]>,
   >(child: TChild) {
     const collectionName = getGameObjectKey((child as GameObject).name);
+    if (!this.children[collectionName])
+      throw new Error(
+        `Collection name '${collectionName}' is not a valid child collection for game object '${this.name}'.`,
+      );
     const children = this.getChildren<TGameObject, TChild>(collectionName);
     children.push(child);
     (child as GameObject).owner = this;
