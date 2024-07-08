@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Implemented `GameObject.getNonCircularCopy()` method that returns a deep copy of a game object without any `owner` references.
 
+- Implemented `GameObject.addModifier()` and `GameObject.removeModifier()` methods.
+
 ### Fixed
 
 - `Dependency` now checks against modified values instead of actual values when checking numeric properties.
