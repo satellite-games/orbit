@@ -4,6 +4,7 @@ import { GameObject } from '.';
 import { Wagon, wagons } from 'internal-mocks/wagon.go';
 import { Train, trains } from 'internal-mocks/train.go';
 import { Stat, stats } from 'internal-mocks/stat.go';
+import { Modifier } from '@/modifier';
 
 describe('constructor', () => {
   it('should properly create a blueprint and its corresponding game objects', () => {
@@ -286,5 +287,55 @@ describe('serialize', () => {
     }
     const customGameObject = new CustomGameObject({ name: 'custom-game-object' as any, id: '1' });
     expect(await customGameObject.serialize()).toBe('{"name":"custom-game-object","id":"1","number":42}');
+  });
+});
+
+describe('addModifier/removeModifier', () => {
+  it('should add the modifier', () => {
+    const train = new Train({ ...trains.thomas });
+    const modifier = new Modifier<Train>({
+      targetName: train.name,
+      keys: ['length'],
+      amount: 1,
+    });
+    expect(train.modifiers).toBeUndefined();
+    expect(train.getModifiersRecursively()).toEqual([]);
+    expect(train.addModifier(modifier)).toEqual([modifier]);
+    expect(train.modifiers).toEqual([modifier]);
+    expect(train.getModifiersRecursively()).toEqual([modifier]);
+  });
+
+  it('should remove modifiers', () => {
+    const train = new Train({ ...trains.thomas });
+    const modifier1 = new Modifier<Train>({
+      targetName: train.name,
+      keys: ['length'],
+      amount: 1,
+    });
+    const modifier2 = new Modifier<Train>({
+      targetName: train.name,
+      keys: ['length'],
+      amount: 1,
+    });
+    expect(train.modifiers).toBeUndefined();
+    expect(train.addModifier(modifier1)).toEqual([modifier1]);
+    expect(train.addModifier(modifier2)).toEqual([modifier1, modifier2]);
+    expect(train.modifiers).toEqual([modifier1, modifier2]);
+    expect(train.removeModifier(modifier1)).toEqual([modifier2]);
+    expect(train.modifiers).toEqual([modifier2]);
+    expect(train.removeModifier(modifier2)).toEqual([]);
+    expect(train.modifiers).toBeUndefined();
+  });
+
+  it("should do nothing when attempting to remove a modifier that isn't there", () => {
+    const train = new Train({ ...trains.thomas });
+    const modifier = new Modifier<Train>({
+      targetName: train.name,
+      keys: ['length'],
+      amount: 1,
+    });
+    expect(train.modifiers).toBeUndefined();
+    expect(train.removeModifier(modifier)).toEqual([]);
+    expect(train.modifiers).toBeUndefined();
   });
 });

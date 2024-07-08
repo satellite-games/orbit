@@ -338,4 +338,26 @@ export class GameObject implements GameObject {
 
     return JSON.stringify(state);
   }
+
+  /**
+   * Adds the given modifier to the game object.
+   * @param modifier The modifier to add.
+   */
+  addModifier(modifier: Modifier<any>): Modifier<GameObject>[] {
+    if (!this.modifiers) this.modifiers = [];
+    this.modifiers.push(modifier);
+    return this.modifiers;
+  }
+
+  /**
+   * Removes the given modifier.
+   * @param modifier The modifier to remove.
+   */
+  removeModifier(modifier: Modifier<any>): Modifier<GameObject>[] {
+    if (!this.modifiers) return [];
+    const index = this.modifiers.indexOf(modifier);
+    if (modifier) this.modifiers.splice(index, 1);
+    if (this.modifiers.length === 0) this.modifiers = undefined;
+    return this.modifiers ?? [];
+  }
 }
